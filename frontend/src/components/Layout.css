@@ -1,0 +1,9 @@
+.layout {
+  /* Background image for the entire layout */
+  background-color: rgb(255, 255, 255); /* Place your image in the public folder image: url("")*/
+  background-size: cover; /* Cover the entire viewport */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Don't repeat the image */
+  background-attachment: fixed; /* Fixed background when scrolling */
+  min-height: 100vh; /* Ensure it covers the full viewport height */
+}

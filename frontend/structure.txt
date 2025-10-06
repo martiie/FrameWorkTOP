@@ -1,0 +1,22 @@
+src/
+├── components/
+│   ├── ui/
+│   │   ├── Button.tsx
+│   │   ├── Card.tsx
+│   │   └── Tabs.tsx
+│   ├── Header.tsx
+│   ├── Footer.tsx
+│   └── Layout.tsx
+├── pages/
+│   ├── Homes.tsx
+│   ├── About.tsx
+│   ├── Skills.tsx
+│   ├── Projects.tsx
+│   ├── ProjectDetail.tsx
+│   └── Contact.tsx
+├── types/
+│   └── index.ts
+├── utils/
+│   └── helpers.ts
+├── App.tsx
+└── index.tsx
