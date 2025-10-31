@@ -1,0 +1,28 @@
+# PyTorch stack CUDA 12.6 (already installed)
+torch==2.8.0+cu126
+torchvision==0.23.0+cu126
+torchaudio==2.8.0+cu126
+--extra-index-url https://download.pytorch.org/whl/cu126
+
+# Anomalib
+anomalib==2.2.0
+
+# Lightning
+pytorch-lightning==2.5.5
+
+# ML / Utils
+numpy<2
+scikit-learn
+scipy
+matplotlib
+pandas
+tqdm
+pyyaml
+tensorboard
+
+# ONNX tooling
+onnx==1.19.1
+onnxruntime==1.23.2
+
+# Image processing
+opencv-python
