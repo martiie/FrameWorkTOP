@@ -1,3 +1,5 @@
 venv/
 *.onnx
 *.ckpt
+
+__pycache__/

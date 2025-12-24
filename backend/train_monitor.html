@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>YOLO Training Dashboard (Realtime Smooth)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  label { font-weight: bold; margin-right: 5px; }
+  select { margin-right: 20px; }
+  #status { font-weight: bold; margin-left: 10px; }
+</style>
+</head>
+<body>
+
+<h2>YOLO Training Dashboard (Realtime Smooth)</h2>
+
+<div>
+  <label>Project:</label>
+  <select id="projectSelect"></select>
+  <span id="status"></span>
+</div>
+
+<canvas id="chart" width="800" height="400"></canvas>
+
+<script>
+const API_BASE = "http://127.0.0.1:8000";
+
+let chart = null;
+let currentProject = null;
+let ws = null;
+
+// Load list of projects
+async function loadProjects() {
+  try {
+    const res = await fetch(`${API_BASE}/names`);
+    const data = await res.json();
+
+    const select = document.getElementById("projectSelect");
+    select.innerHTML = "";
+
+    if (data.length === 0) return;
+
+    data.forEach(job => {
+      const opt = document.createElement("option");
+      opt.value = job.name;
+      opt.textContent = job.name;
+      select.appendChild(opt);
+    });
+
+    currentProject = select.value;
+    document.getElementById("status").textContent = getStatus(data, currentProject);
+
+    onProjectChange();
+  } catch (err) {
+    console.error("Failed to load projects:", err);
+  }
+}
+
+function getStatus(projects, name) {
+  const p = projects.find(j => j.name === name);
+  return p ? `Status: ${p.status}` : "";
+}
+
+// When project changes
+function onProjectChange() {
+  currentProject = document.getElementById("projectSelect").value;
+  connectWebSocket();
+}
+
+// Connect WebSocket for realtime metrics
+function connectWebSocket() {
+  if (ws) ws.close(); // ปิด connection เก่าก่อน
+
+  ws = new WebSocket(`ws://127.0.0.1:8000/train/${currentProject}/metrics`);
+
+  ws.onopen = () => console.log("WebSocket connected for project:", currentProject);
+
+  ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    const rows = data.metrics;
+    if (!rows || rows.length === 0) return;
+
+    const metricKeys = Object.keys(rows[0]).filter(k => k !== "epoch" && k !== "time");
+    const epochs = rows.map(r => r.epoch);
+    const colors = ["blue", "red", "green", "orange", "purple", "brown"];
+
+    if (!chart) {
+      // สร้าง chart ครั้งแรก
+      const datasets = metricKeys.map((key, idx) => ({
+        label: key,
+        data: rows.map(r => r[key]),
+        borderColor: colors[idx % colors.length],
+        fill: false,
+        tension: 0.1,
+        borderWidth: 2
+      }));
+
+      chart = new Chart(document.getElementById("chart"), {
+        type: "line",
+        data: { labels: epochs, datasets: datasets },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: true },
+            title: { display: true, text: "Training Metrics (Realtime)" }
+          },
+          scales: {
+            x: { title: { display: true, text: "Epoch" } },
+            y: { title: { display: true, text: "Value" } }
+          }
+        }
+      });
+    } else {
+      // อัปเดต chart เดิมแบบ smooth
+      chart.data.labels = epochs;
+      chart.data.datasets.forEach((ds, idx) => {
+        ds.data = rows.map(r => r[metricKeys[idx]]);
+      });
+      chart.update();
+    }
+
+    document.getElementById("status").textContent = `Status: Realtime`;
+  };
+
+  ws.onclose = () => console.log("WebSocket closed");
+  ws.onerror = (err) => console.error("WebSocket error:", err);
+}
+
+// Event listener
+document.getElementById("projectSelect").onchange = onProjectChange;
+
+// Initial load
+loadProjects();
+</script>
+
+</body>
+</html>
