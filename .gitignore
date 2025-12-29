@@ -1,3 +1,5 @@
 venv/
 *.onnx
 *.ckpt
+/train_logs/
+/Models_Padim/

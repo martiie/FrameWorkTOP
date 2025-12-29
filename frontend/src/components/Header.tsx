@@ -2,14 +2,9 @@
 
 import type React from "react"
 import { useState } from "react"
-import Button from "./ui/Button"
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
-  }
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background backdrop-blur">
@@ -34,32 +29,7 @@ const Header: React.FC = () => {
             ติดต่อ
           </a>
         </nav>
-        <Button variant="outline" size="icon" className="md:hidden mr-4" onClick={toggleMenu} aria-label="Toggle Menu">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            {isMenuOpen ? (
-              <>
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </>
-            ) : (
-              <>
-                <line x1="4" y1="12" x2="20" y2="12" />
-                <line x1="4" y1="6" x2="20" y2="6" />
-                <line x1="4" y1="18" x2="20" y2="18" />
-              </>
-            )}
-          </svg>
-        </Button>
+       
 
         {/* Mobile Menu */}
         {isMenuOpen && (

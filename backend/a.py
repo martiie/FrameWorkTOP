@@ -8,7 +8,7 @@ import os
 
 # โหลดโมเดล
 # session = ort.InferenceSession("Models_Padim\weights\onnx\model.onnx")
-session = ort.InferenceSession("Models_PatchCore\weights\onnx\model.onnx")
+session = ort.InferenceSession("Models_Padim\weights\onnx\model.onnx")
 # เตรียม loop
 x = 0
 data_dir = r"dataset\good"  # โฟลเดอร์ที่เก็บภาพทดสอบ

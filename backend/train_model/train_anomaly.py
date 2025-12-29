@@ -1,3 +1,6 @@
+import os
+os.environ["TORCH_ONNX_USE_DYNAMO"] = "0"
+
 from anomalib.data import Folder
 # from anomalib.models import Patchcore
 from lightning.pytorch import Trainer
@@ -49,7 +52,7 @@ if __name__ == "__main__":
 
     # --- 3. เทรน ---
     if torch.cuda.is_available():
-        trainer = Trainer(max_epochs=100,
+        trainer = Trainer(max_epochs=10,
             accelerator="gpu",  # ใช้ GPU ถ้ามี
             devices=1,
             num_sanity_val_steps=0,
